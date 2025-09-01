@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import '../styles/home.css'; // keep styles same
+import '../styles/home.css';
 
 const NAV_LINKS = [
   { href: '#events', label: 'Events' },

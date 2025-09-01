@@ -163,3 +163,44 @@ body{
 
 /* small helper styles */
 .muted-note{ color:var(--muted); font-size:.92rem; margin-top:8px; }
+
+/* Responsive grid adjustments */
+@media (max-width: 1024px) {
+  .cards-grid article,
+  .grid > article {
+    grid-column: span 6 !important; /* half-width on tablets */
+  }
+}
+
+@media (max-width: 768px) {
+  .cards-grid article,
+  .grid > article {
+    grid-column: span 12 !important; /* full-width on mobile */
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+  }
+
+  .events-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .modal {
+    width: 95% !important;
+    margin: 0 auto;
+  }
+}
+
+/* Make carousel images fit on small screens */
+.featured-carousel img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+

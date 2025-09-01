@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import '../styles/home.css';
-import Navbar from './Navbar';
+ 
 
 const NAV_LINKS = [
   { href: '#events', label: 'Events' },
