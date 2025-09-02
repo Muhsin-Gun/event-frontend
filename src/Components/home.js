@@ -420,3 +420,66 @@ function Events({ onOpenTicket }) {
   );
 }
 
+/* ========================= PRICING ========================= */
+function Pricing({ onOpenTicket }) {
+  return (
+    <section id="pricing" className="section container">
+      <h2>Tickets & Pricing</h2>
+      <p className="sub">Simple passes for every fan. All prices in USD for demo.</p>
+
+      <div className="grid" style={{ gridTemplateColumns: 'repeat(12, 1fr)', gap: '1rem' }}>
+        {PRICING.map((p) => (
+          <article key={p.id} className="card" style={{ gridColumn: 'span 4' }}>
+            <div className="card-body">
+              <div className="card-row" style={{ justifyContent: 'space-between' }}>
+                <div className="model">{p.name}</div>
+                <div className="price">{formatUSD(p.price)}</div>
+              </div>
+
+              <div className="card-row" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '.4rem' }}>
+                {p.perks.map((perk, i) => (
+                  <span key={i} className="pill">{perk}</span>
+                ))}
+              </div>
+
+              <div className="actions">
+                <button className={`btn ${p.highlight ? '' : 'secondary'}`} onClick={() => onOpenTicket({ id: p.id, model: p.name })}>
+                  {p.highlight ? 'Get VIP' : 'Select'}
+                </button>
+                <button className="ghost" onClick={() => alert(`${p.name} — more details (stub).`)}>Details</button>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ========================= SPONSORS (reuse grid styles) ========================= */
+function Sponsors() {
+  return (
+    <section className="section container" aria-label="Sponsors">
+      <h2>Partners & Sponsors</h2>
+      <p className="sub">Powering the scene with premium performance brands.</p>
+
+      <div className="grid" style={{ gridTemplateColumns: 'repeat(12, 1fr)', gap: '1rem' }}>
+        {SPONSORS.map((s) => (
+          <article key={s.id} className="card" style={{ gridColumn: 'span 3', display: 'grid' }}>
+            <img className="card-img" src={s.img} alt={s.name} loading="lazy" />
+            <div className="card-body">
+              <div className="card-row" style={{ justifyContent: 'space-between' }}>
+                <div className="model">{s.name}</div>
+                <div className="pill">Official</div>
+              </div>
+              <div className="actions">
+                <button className="ghost" onClick={() => alert(`${s.name} — profile (stub)`)}>Learn more</button>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
