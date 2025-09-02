@@ -483,3 +483,288 @@ function Sponsors() {
   );
 }
 
+/* ========================= GALLERY STRIP ========================= */
+function GalleryStrip() {
+  const scrollerRef = useRef(null);
+
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    let anim;
+    let pos = 0;
+    const step = () => {
+      pos += 0.5; // slow pan
+      el.scrollLeft = pos;
+      if (pos >= el.scrollWidth - el.clientWidth) pos = 0;
+      anim = requestAnimationFrame(step);
+    };
+    anim = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(anim);
+  }, []);
+
+  return (
+    <section className="section" aria-label="Gallery">
+      <div className="container">
+        <h2>Scenes from past meets</h2>
+        <p className="sub">Rolling shots, paddock vibes & fans’ moments.</p>
+      </div>
+
+      <div
+        ref={scrollerRef}
+        style={{
+          display: 'flex',
+          overflowX: 'auto',
+          gap: '10px',
+          padding: '10px 4vw 0',
+          scrollBehavior: 'smooth',
+          maskImage: 'linear-gradient(90deg, transparent 0, black 6%, black 94%, transparent 100%)',
+        }}
+      >
+        {GALLERY.concat(GALLERY).map((src, i) => (
+          <img
+            key={i}
+            src={src}
+            alt="RevMeet gallery"
+            loading="lazy"
+            style={{
+              height: '220px',
+              width: 'auto',
+              borderRadius: '14px',
+              objectFit: 'cover',
+              flex: '0 0 auto',
+              border: '1px solid rgba(255,255,255,.08)',
+              filter: 'saturate(1.05) contrast(1.05)',
+            }}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ========================= FAQ (accordion, no extra CSS needed) ========================= */
+function FAQ() {
+  const [open, setOpen] = useState(null);
+  return (
+    <section className="section container" aria-label="FAQ">
+      <h2>FAQ</h2>
+      <p className="sub">Logistics, tickets, and what to expect at RevMeet.</p>
+
+      <div className="grid" style={{ gridTemplateColumns: 'repeat(12, 1fr)', gap: '1rem' }}>
+        {FAQS.map((f, i) => (
+          <article key={i} className="card" style={{ gridColumn: 'span 6' }}>
+            <button
+              className="card-body"
+              style={{ textAlign: 'left', background: 'transparent', border: 0, cursor: 'pointer' }}
+              onClick={() => setOpen(o => (o === i ? null : i))}
+              aria-expanded={open === i}
+            >
+              <div className="card-row" style={{ justifyContent: 'space-between' }}>
+                <div className="model">{f.q}</div>
+                <div className="pill">{open === i ? '−' : '+'}</div>
+              </div>
+
+              {open === i && (
+                <div className="card-row" style={{ marginTop: '.6rem' }}>
+                  <p className="muted-note" style={{ margin: 0 }}>{f.a}</p>
+                </div>
+              )}
+            </button>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ========================= CONTACT ========================= */
+function Contact() {
+  const [status, setStatus] = useState(null);
+  const nameRef = useRef(null);
+  const emailRef = useRef(null);
+  const msgRef = useRef(null);
+
+  function submit(e) {
+    e.preventDefault();
+    setStatus('sending');
+    // demo timeout
+    setTimeout(() => setStatus('sent'), 800);
+  }
+
+  return (
+    <section id="contact" className="section container">
+      <h2>Contact</h2>
+      <p className="sub">Questions, partnerships or media — reach out.</p>
+
+      <div className="grid" style={{ gridTemplateColumns: 'repeat(12, 1fr)', gap: '1rem' }}>
+        <article className="card" style={{ gridColumn: 'span 7' }}>
+          <form className="card-body" onSubmit={submit}>
+            <div className="form-row">
+              <label>Name<input ref={nameRef} placeholder="Jane Gearhead" required /></label>
+              <label>Email<input ref={emailRef} type="email" placeholder="you@example.com" required /></label>
+            </div>
+            <div className="form-row">
+              <label style={{ width: '100%' }}>Message
+                <textarea ref={msgRef} rows="5" placeholder="How can we help?" style={{ width: '100%', resize: 'vertical' }} />
+              </label>
+            </div>
+            <div className="actions">
+              <button className="btn" disabled={status === 'sending'}>{status === 'sending' ? 'Sending…' : 'Send'}</button>
+              {status === 'sent' && <span className="pill">Thanks — we’ll reply soon.</span>}
+            </div>
+          </form>
+        </article>
+
+        <article className="card" style={{ gridColumn: 'span 5' }}>
+          <div className="card-body">
+            <div className="card-row" style={{ justifyContent: 'space-between' }}>
+              <div className="model">HQ</div>
+              <div className="pill">Nairobi</div>
+            </div>
+            <p className="muted-note">Whistling Morans Circuit, Athi River</p>
+
+            <div className="card-row" style={{ marginTop: '.6rem', flexWrap: 'wrap', gap: '.6rem' }}>
+              <span className="pill">hello@revmeet.example</span>
+              <span className="pill">+254 700 000 000</span>
+              <span className="pill">Mon–Fri</span>
+            </div>
+
+            <div className="actions" style={{ marginTop: '.6rem' }}>
+              <button className="ghost" onClick={() => window.open('https://maps.google.com', '_blank')}>Open Maps</button>
+              <a className="btn secondary" href="#pricing">Tickets & Pricing</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  );
+}
+
+/* ========================= FOOTER ========================= */
+function SiteFooter() {
+  return (
+    <footer className="site-footer container">
+      <div className="footer-grid">
+        <div>
+          <a className="brand footer-brand" href="#home">RevMeet</a>
+          <p className="muted-note">Designed for car lovers — secure payments via M-Pesa, responsive UI and event reporting.</p>
+        </div>
+
+        <div>
+          <h4>Contact</h4>
+          <p className="muted-note">hello@revmeet.example • Nairobi</p>
+        </div>
+
+        <div>
+          <h4>Follow</h4>
+          <p className="muted-note">Instagram • Twitter • Facebook</p>
+        </div>
+      </div>
+
+      <div className="footer-bottom">© {new Date().getFullYear()} RevMeet — All rights reserved.</div>
+    </footer>
+  );
+}
+
+/* ========================= SCROLL TO TOP BTN (uses existing button styles) ========================= */
+function ScrollTop() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setShow(window.scrollY > 480);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  if (!show) return null;
+  return (
+    <button
+      className="btn"
+      style={{
+        position: 'fixed',
+        right: '18px',
+        bottom: '18px',
+        zIndex: 60,
+        paddingInline: '.9rem',
+      }}
+      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+    >
+      ↑
+    </button>
+  );
+}
+
+/* ========================= MAIN HOME PAGE (export default) ========================= */
+/** NOTE:
+ * Navbar is **separate** (Navbar.jsx). Do not inline it here.
+ * This page reuses your existing CSS utility classes to stay responsive.
+ */
+export default function Home() {
+  const [ticketOpen, setTicketOpen] = useState(false);
+  const [ticketItem, setTicketItem] = useState(null);
+
+  // Intersection Observer for subtle fade/slide reveal (no new CSS required)
+  const ioRef = useRef(null);
+  useEffect(() => {
+    const els = document.querySelectorAll('[data-reveal]');
+    if (!('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.style.transform = 'none';
+          e.target.style.opacity = '1';
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08 });
+
+    els.forEach((el) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(14px)';
+      el.style.transition = 'opacity .5s ease, transform .5s ease';
+      io.observe(el);
+    });
+
+    ioRef.current = io;
+    return () => io.disconnect();
+  }, []);
+
+  function openTicket(item) {
+    setTicketItem(item || { id: 'revmeet-weekend', model: 'RevMeet Weekend Track Day' });
+    setTicketOpen(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  return (
+    <>
+      {/* Navbar lives in its own file: <Navbar /> is mounted in App.jsx or your layout */}
+      <main>
+        <div data-reveal><Hero onGetTickets={() => openTicket(null)} /></div>
+        <div data-reveal><FeaturedSection onOpenTicket={openTicket} /></div>
+        <div data-reveal><Events onOpenTicket={openTicket} /></div>
+        <div data-reveal><Pricing onOpenTicket={openTicket} /></div>
+        <div data-reveal><Sponsors /></div>
+        <div data-reveal><GalleryStrip /></div>
+        <div data-reveal><FAQ /></div>
+        <div data-reveal><Contact /></div>
+        <SiteFooter />
+      </main>
+
+      <ScrollTop />
+      <TicketModal open={ticketOpen} onClose={() => setTicketOpen(false)} item={ticketItem} />
+    </>
+  );
+}
+
+/* -------------------------
+   Helpers
+   ------------------------- */
+function getCountdown(targetDate) {
+  const t = targetDate.getTime() - Date.now();
+  if (t <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  const days = Math.floor(t / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((t / (1000 * 60)) % 60);
+  const seconds = Math.floor((t / 1000) % 60);
+  return { days, hours, minutes, seconds };
+}
+function pad(n) { return String(n).padStart(2, '0'); }
