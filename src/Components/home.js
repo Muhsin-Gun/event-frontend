@@ -1,4 +1,5 @@
-import React, { useRef, useState } from 'react';
+// src/Components/Home.js
+import React, { useState } from 'react';
 import Hero from './Hero';
 import Showcase from './Showcase';
 import Events from './Events';
@@ -15,8 +16,6 @@ import '../styles/home.css';
 export default function Home() {
   const [ticketOpen, setTicketOpen] = useState(false);
   const [ticketItem, setTicketItem] = useState(null);
-
-  const ioRef = useRef(null);
 
   function openTicket(item) {
     setTicketItem(item || { id: 'revmeet-weekend', model: 'RevMeet Weekend Track Day' });
