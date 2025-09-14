@@ -1,3 +1,4 @@
+// src/Components/Navbar.js
 import React, { useEffect, useRef, useState } from 'react';
 import '../styles/home.css';
 
@@ -26,6 +27,12 @@ export default function Navbar() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
+  // close mobile menu when clicking a nav link (mobile UX) but do not remove the navbar itself
+  function handleNavLinkClick(e, href) {
+    // allow default anchor scroll; close menu
+    setOpen(false);
+  }
+
   return (
     <header className={`navbar ${scrolled ? 'scrolled' : ''}`} ref={navRef} role="navigation" aria-label="Primary">
       <div className="container nav-inner">
@@ -46,11 +53,12 @@ export default function Navbar() {
 
         <nav id="primary-menu" className={`nav-links ${open ? 'open' : ''}`}>
           {NAV_LINKS.map(l => (
-            <a key={l.href} href={l.href} onClick={() => setOpen(false)}>{l.label}</a>
+            <a key={l.href} href={l.href} onClick={(e) => handleNavLinkClick(e, l.href)}>{l.label}</a>
           ))}
+
           <div className="nav-cta" style={{ marginTop: '.4rem' }}>
-            <a className="btn secondary" href="#login">Sign In</a>
-            <a className="btn" href="#get-tickets">Get Tickets</a>
+            <a className="btn secondary" href="#login" onClick={() => setOpen(false)}>Sign In</a>
+            <a className="btn" href="#get-tickets" onClick={() => setOpen(false)}>Get Tickets</a>
           </div>
         </nav>
 
