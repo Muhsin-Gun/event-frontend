@@ -20,7 +20,7 @@ export default function Pricing({ onOpenTicket }) {
 
       <div className="grid" style={{ gridTemplateColumns: 'repeat(12, 1fr)', gap: '1rem' }}>
         {PRICING.map((p) => (
-          <article key={p.id} className="card" style={{ gridColumn: 'span 4' }}>
+          <article key={p.id} className="card pricing-card" style={{ gridColumn: 'span 4' }}>
             <div className="card-body">
               <div className="card-row" style={{ justifyContent: 'space-between' }}>
                 <div className="model">{p.name}</div>

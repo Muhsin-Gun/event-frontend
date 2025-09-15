@@ -1,3 +1,4 @@
+// src/Components/Footer.js
 import React from 'react';
 import '../styles/home.css';
 
@@ -25,3 +26,4 @@ export default function SiteFooter() {
     </footer>
   );
 }
+

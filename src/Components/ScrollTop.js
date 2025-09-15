@@ -1,3 +1,4 @@
+// src/Components/ScrollTop.js
 import React, { useEffect, useState } from 'react';
 import '../styles/home.css';
 
@@ -21,8 +22,10 @@ export default function ScrollTop() {
         paddingInline: '.9rem',
       }}
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      aria-label="Scroll to top"
     >
       ↑
     </button>
   );
 }
+

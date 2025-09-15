@@ -1,5 +1,5 @@
 // src/Components/Home.js
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import Hero from './Hero';
 import Showcase from './Showcase';
 import Events from './Events';
@@ -42,4 +42,5 @@ export default function Home() {
     </>
   );
 }
+
 

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './Components/Navbar';
-import Home from './Components/Home'; 
+import Home from './Components/Home';
 import Events from './Components/Events';
 import Contact from './Components/Contact';
 import Login from './Components/Login';
@@ -32,3 +32,4 @@ export default function App() {
     </>
   );
 }
+

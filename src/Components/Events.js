@@ -1,3 +1,4 @@
+// src/Components/Events.js
 import React from 'react';
 import '../styles/home.css';
 
@@ -53,3 +54,4 @@ export default function Events({ onOpenTicket }) {
     </section>
   );
 }
+

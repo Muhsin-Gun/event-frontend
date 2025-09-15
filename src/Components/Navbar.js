@@ -1,20 +1,22 @@
 // src/Components/Navbar.js
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import '../styles/home.css';
 
 const NAV_LINKS = [
-  { to: '/', label: 'Home' },
-  { to: '/events', label: 'Events' },
-  { to: '/showcase', label: 'Showcase' },
-  { to: '/pricing', label: 'Pricing' },
-  { to: '/contact', label: 'Contact' },
+  { to: 'home', label: 'Home' },
+  { to: 'events', label: 'Events' },
+  { to: 'showcase', label: 'Showcase' },
+  { to: 'pricing', label: 'Pricing' },
+  { to: 'contact', label: 'Contact' },
 ];
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const navRef = useRef(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -29,9 +31,26 @@ export default function Navbar() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  // mobile: close menu but DO NOT remove navbar from page (keeps it persistent)
   function onNavClick() {
     setOpen(false);
+  }
+
+  // Smooth scroll handler: if on homepage, scroll to section; otherwise navigate to home then scroll.
+  async function handleAnchorClick(e, id) {
+    e.preventDefault();
+    onNavClick();
+    if (location.pathname !== '/') {
+      // navigate home first, then scroll when DOM ready
+      navigate('/');
+      // delay to allow Home to mount. Using requestAnimationFrame + setTimeout small delay.
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 120);
+    } else {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   return (
@@ -53,14 +72,13 @@ export default function Navbar() {
 
         <nav id="primary-menu" className={`nav-links ${open ? 'open' : ''}`}>
           {NAV_LINKS.map(l => (
-            <NavLink
+            <a
               key={l.to}
-              to={l.to}
-              onClick={onNavClick}
-              className={({ isActive }) => (isActive ? 'active' : '')}
+              href={`#${l.to}`}
+              onClick={(e) => handleAnchorClick(e, l.to)}
             >
               {l.label}
-            </NavLink>
+            </a>
           ))}
 
           <div className="nav-cta" style={{ marginTop: '.4rem' }}>
@@ -77,3 +95,4 @@ export default function Navbar() {
     </header>
   );
 }
+

@@ -1,3 +1,4 @@
+// src/Components/FAQ.js
 import React, { useState } from 'react';
 import '../styles/home.css';
 

@@ -3,12 +3,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import '../styles/home.css';
 
 const FEATURED_CARS = [
-  { id: 'audi-r8', model: 'Audi R8', priceUSD: 170000, power: '562 hp', zeroTo100: '3.4s', img: encodeURI('/WhatsApp Image 2025-09-15 at 20.52.09_bcedf6d1.jpg'), credit: 'Unsplash' },
-  { id: 'bmw-m5', model: 'BMW M5 Competition (Black)', priceUSD: 120000, power: '617 hp', zeroTo100: '3.3s', img: encodeURI('/WhatsApp Image 2025-09-15 at 20.50.48_eb3a097a.jpg'), credit: 'Unsplash' },
-  { id: 'merc-amg', model: 'Mercedes AMG (Aura)', priceUSD: 160000, power: '630 hp', zeroTo100: '3.2s', img: encodeURI('/WhatsApp Image 2025-09-15 at 20.44.30_f4434a17.jpg'), credit: 'Unsplash' },
-  { id: 'ferrari', model: 'Ferrari (Showcase)', priceUSD: 290000, power: '661 hp', zeroTo100: '3.0s', img: encodeURI('/WhatsApp Image 2025-09-15 at 20.54.22_6ea3691a.jpg'), credit: 'Unsplash' },
-  { id: 'pagani', model: 'Pagani (Showcase)', priceUSD: 1500000, power: '740 hp', zeroTo100: '2.8s', img: encodeURI('/WhatsApp Image 2025-09-15 at 20.55.57_8e916857.jpg'), credit: 'Unsplash' },
-  { id: 'lambo', model: 'Lamborghini (Showcase)', priceUSD: 517000, power: '770 hp', zeroTo100: '2.8s', img: encodeURI('/WhatsApp Image 2025-09-15 at 20.56.43_0d976f1f.jpg'), credit: 'Unsplash' },
+  { id: 'audi-r8', model: 'Audi R8', priceUSD: 170000, power: '562 hp', zeroTo100: '3.4s', img: encodeURI('/WhatsApp Image 2025-09-15 at 20.52.09_bcedf6d1.jpg'), credit: 'Local' },
+  { id: 'bmw-m5', model: 'BMW M5 Competition (Black)', priceUSD: 120000, power: '617 hp', zeroTo100: '3.3s', img: encodeURI('/WhatsApp Image 2025-09-15 at 20.50.48_eb3a097a.jpg'), credit: 'Local' },
+  { id: 'merc-amg', model: 'Mercedes AMG (Aura)', priceUSD: 160000, power: '630 hp', zeroTo100: '3.2s', img: encodeURI('/WhatsApp Image 2025-09-15 at 20.44.30_f4434a17.jpg'), credit: 'Local' },
+  { id: 'ferrari', model: 'Ferrari (Showcase)', priceUSD: 290000, power: '661 hp', zeroTo100: '3.0s', img: encodeURI('/WhatsApp Image 2025-09-15 at 20.54.22_6ea3691a.jpg'), credit: 'Local' },
+  { id: 'pagani', model: 'Pagani (Showcase)', priceUSD: 1500000, power: '740 hp', zeroTo100: '2.8s', img: encodeURI('/WhatsApp Image 2025-09-15 at 20.55.57_8e916857.jpg'), credit: 'Local' },
+  { id: 'lambo', model: 'Lamborghini (Showcase)', priceUSD: 517000, power: '770 hp', zeroTo100: '2.8s', img: encodeURI('/WhatsApp Image 2025-09-15 at 20.56.43_0d976f1f.jpg'), credit: 'Local' },
 ];
 
 function formatUSD(n) {
@@ -50,6 +50,10 @@ export default function Showcase({ onOpenTicket }) {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
+  // width for slides container (dynamic)
+  const slidesWidth = `${FEATURED_CARS.length * 100}%`;
+  const transform = { transform: `translateX(-${index * (100 / FEATURED_CARS.length)}%)`, width: slidesWidth };
+
   return (
     <section id="showcase" className="section container">
       <div className="featured-top">
@@ -58,7 +62,7 @@ export default function Showcase({ onOpenTicket }) {
           onMouseEnter={() => { setPaused(true); stopAuto(); }}
           onMouseLeave={() => { setPaused(false); startAuto(); }}
         >
-          <div className="slides" style={{ transform: `translateX(-${index * 100}%)` }}>
+          <div className="slides" style={transform}>
             {FEATURED_CARS.map((c) => (
               <figure key={c.id} className="slide" role="group" aria-label={`${c.model} slide`}>
                 <img src={c.img} alt={c.model} loading="lazy" />
@@ -125,3 +129,4 @@ export default function Showcase({ onOpenTicket }) {
     </section>
   );
 }
+
