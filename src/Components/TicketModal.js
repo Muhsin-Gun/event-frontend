@@ -1,3 +1,4 @@
+// src/Components/TicketModal.js
 import React, { useEffect, useState } from 'react';
 import '../styles/home.css';
 
@@ -16,7 +17,13 @@ export default function TicketModal({ open, onClose, item }) {
 
   useEffect(() => {
     if (!open) {
-      setName(''); setEmail(''); setPhone(''); setType('general'); setQty(1); setMessage(null); setLoading(false);
+      setName('');
+      setEmail('');
+      setPhone('');
+      setType('general');
+      setQty(1);
+      setMessage(null);
+      setLoading(false);
     }
   }, [open]);
 
@@ -27,13 +34,15 @@ export default function TicketModal({ open, onClose, item }) {
   async function handleSubmit(e) {
     e.preventDefault();
     setMessage(null);
-    if (!phone || phone.length < 7) { setMessage({ type: 'error', text: 'Please enter a valid phone number.' }); return; }
+    if (!phone || phone.replace(/\D/g, '').length < 7) {
+      setMessage({ type: 'error', text: 'Please enter a valid phone number.' });
+      return;
+    }
     setLoading(true);
 
     const payload = {
       eventId: item?.id || 'revmeet-weekend',
       phone: phone.replace(/\D/g, ''),
-      // backend expects event.price server-side; we still send amount for record
       amount: Math.round(price * qty),
       meta: { name, email, type, qty },
     };
@@ -109,3 +118,4 @@ export default function TicketModal({ open, onClose, item }) {
     </div>
   );
 }
+

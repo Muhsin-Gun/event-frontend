@@ -1,3 +1,4 @@
+// src/Components/Contact.js
 import React, { useRef, useState } from 'react';
 import '../styles/home.css';
 
@@ -10,6 +11,7 @@ export default function Contact() {
   async function submit(e) {
     e.preventDefault();
     setStatus('sending');
+
     const payload = {
       name: nameRef.current.value,
       email: emailRef.current.value,
@@ -19,7 +21,7 @@ export default function Contact() {
     try {
       const resp = await fetch('/api/contact', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(payload),
       });
       if (!resp.ok) throw new Error('Network response was not ok');
@@ -71,7 +73,7 @@ export default function Contact() {
 
             <div className="actions" style={{ marginTop: '.6rem' }}>
               <button className="ghost" onClick={() => window.open('https://maps.google.com', '_blank')}>Open Maps</button>
-              <a className="btn secondary" href="#pricing">Tickets & Pricing</a>
+              <a className="btn secondary" href="/pricing">Tickets & Pricing</a>
             </div>
           </div>
         </article>

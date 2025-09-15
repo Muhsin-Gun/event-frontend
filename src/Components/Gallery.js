@@ -1,71 +1,78 @@
 // src/Components/Gallery.js
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../styles/home.css';
 
 const GALLERY = [
-  'https://images.unsplash.com/photo-1523986371872-9d3ba2e2f642?q=80&w=1400&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1400&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1517949908116-2b2a8f1b7a6b?q=80&w=1400&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?q=80&w=1400&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=1400&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1502877338535-766e1452684a?q=80&w=1400&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1549921296-3c0b091d25d3?q=80&w=1400&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1400&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1400&auto=format&fit=crop'
+  // local images placed in public/
+  encodeURI('/WhatsApp Image 2025-09-15 at 20.52.09_bcedf6d1.jpg'),
+  encodeURI('/WhatsApp Image 2025-09-15 at 20.50.48_eb3a097a.jpg'),
+  encodeURI('/WhatsApp Image 2025-09-15 at 20.44.30_f4434a17.jpg'),
+  encodeURI('/WhatsApp Image 2025-09-15 at 20.54.22_6ea3691a.jpg'),
+  encodeURI('/WhatsApp Image 2025-09-15 at 20.55.57_8e916857.jpg'),
+  encodeURI('/WhatsApp Image 2025-09-15 at 20.56.43_0d976f1f.jpg'),
+  encodeURI('/WhatsApp Image 2025-09-15 at 20.57.30_df66c655.jpg')
 ];
 
 export default function Gallery() {
   const scrollerRef = useRef(null);
+  const rafRef = useRef(null);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
     const el = scrollerRef.current;
     if (!el) return;
+
     let pos = 0;
-    const step = () => {
-      pos += 0.6;
-      el.scrollLeft = pos;
-      if (pos >= el.scrollWidth - el.clientWidth) pos = 0;
-      requestAnimationFrame(step);
+    const speed = 0.5; // px per frame
+
+    function step() {
+      if (!el) return;
+
+      if (!paused) {
+        pos += speed;
+        // loop if we've scrolled half the full (we render two copies)
+        if (pos >= el.scrollWidth / 2) {
+          pos = 0;
+        }
+        el.scrollLeft = pos;
+      }
+
+      rafRef.current = requestAnimationFrame(step);
+    }
+
+    rafRef.current = requestAnimationFrame(step);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-    requestAnimationFrame(step);
-  }, []);
+  }, [paused]);
 
   return (
     <section className="section" aria-label="Gallery">
       <div className="container">
         <h2>Scenes from past meets</h2>
-        <p className="sub">Rolling shots, paddock vibes & fans’ moments — curated supercars and Aura Farming visuals.</p>
+        <p className="sub">Rolling shots, paddock vibes & fans’ moments — curated supercars and aura-styled visuals.</p>
       </div>
+
       <div
         ref={scrollerRef}
-        style={{
-          display: 'flex',
-          overflowX: 'auto',
-          gap: '12px',
-          padding: '12px 4vw 20px',
-          scrollBehavior: 'smooth',
-          maskImage: 'linear-gradient(90deg, transparent 0, black 6%, black 94%, transparent 100%)',
-        }}
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        className="gallery"
+        aria-hidden={false}
       >
+        {/* Duplicate the array for seamless horizontal scroll */}
         {GALLERY.concat(GALLERY).map((src, i) => (
           <img
             key={i}
             src={src}
-            alt="RevMeet car gallery"
+            alt={`RevMeet car ${ (i % GALLERY.length) + 1 }`}
             loading="lazy"
-            style={{
-              width: '500px',
-              height: 'auto',
-              borderRadius: '12px',
-              objectFit: 'cover',
-              flex: '0 0 auto',
-              border: '1px solid rgba(255,255,255,.06)',
-              boxShadow: '0 6px 18px rgba(0,0,0,.25)',
-            }}
+            width={420}
+            height={280}
+            draggable={false}
           />
         ))}
       </div>
     </section>
   );
 }
-

@@ -1,5 +1,5 @@
 // src/Components/Home.js
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Hero from './Hero';
 import Showcase from './Showcase';
 import Events from './Events';
@@ -30,15 +30,16 @@ export default function Home() {
         <div data-reveal><Showcase onOpenTicket={openTicket} /></div>
         <div data-reveal><Events onOpenTicket={openTicket} /></div>
         <div data-reveal><Pricing onOpenTicket={openTicket} /></div>
-        <div data-reveal><Sponsors /></div>      
-        <div data-reveal><Gallery /></div>       
+        <div data-reveal><Sponsors /></div>
+        <div data-reveal><Gallery /></div>
         <div data-reveal><FAQ /></div>
-        <div data-reveal><Contact /></div>       
+        <div data-reveal><Contact /></div>
         <SiteFooter />
       </main>
 
       <ScrollTop />
-      <TicketModal open={ticketOpen} onClose={() => setTicketOpen(false)} item={ticketItem} />    
+      <TicketModal open={ticketOpen} onClose={() => setTicketOpen(false)} item={ticketItem} />
     </>
   );
 }
+

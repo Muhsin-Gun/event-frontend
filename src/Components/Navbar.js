@@ -1,12 +1,14 @@
 // src/Components/Navbar.js
 import React, { useEffect, useRef, useState } from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import '../styles/home.css';
 
 const NAV_LINKS = [
-  { href: '#events', label: 'Events' },
-  { href: '#showcase', label: 'Showcase' },
-  { href: '#pricing', label: 'Pricing' },
-  { href: '#contact', label: 'Contact' },
+  { to: '/', label: 'Home' },
+  { to: '/events', label: 'Events' },
+  { to: '/showcase', label: 'Showcase' },
+  { to: '/pricing', label: 'Pricing' },
+  { to: '/contact', label: 'Contact' },
 ];
 
 export default function Navbar() {
@@ -27,19 +29,17 @@ export default function Navbar() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  // close mobile menu when clicking a nav link (mobile UX) but do not remove the navbar itself
-  function handleNavLinkClick(e, href) {
-    // allow default anchor scroll; close menu
+  // mobile: close menu but DO NOT remove navbar from page (keeps it persistent)
+  function onNavClick() {
     setOpen(false);
   }
 
   return (
     <header className={`navbar ${scrolled ? 'scrolled' : ''}`} ref={navRef} role="navigation" aria-label="Primary">
       <div className="container nav-inner">
-        <a className="brand" href="#home" aria-label="RevMeet home">
-          <span className="brand-mark" aria-hidden="true" />
-          RevMeet
-        </a>
+        <Link to="/" className="brand" aria-label="RevMeet home" onClick={onNavClick}>
+          <span className="brand-mark" aria-hidden="true" /> RevMeet
+        </Link>
 
         <button
           className="nav-toggle"
@@ -53,18 +53,25 @@ export default function Navbar() {
 
         <nav id="primary-menu" className={`nav-links ${open ? 'open' : ''}`}>
           {NAV_LINKS.map(l => (
-            <a key={l.href} href={l.href} onClick={(e) => handleNavLinkClick(e, l.href)}>{l.label}</a>
+            <NavLink
+              key={l.to}
+              to={l.to}
+              onClick={onNavClick}
+              className={({ isActive }) => (isActive ? 'active' : '')}
+            >
+              {l.label}
+            </NavLink>
           ))}
 
           <div className="nav-cta" style={{ marginTop: '.4rem' }}>
-            <a className="btn secondary" href="#login" onClick={() => setOpen(false)}>Sign In</a>
-            <a className="btn" href="#get-tickets" onClick={() => setOpen(false)}>Get Tickets</a>
+            <Link className="btn secondary" to="/login" onClick={onNavClick}>Sign In</Link>
+            <Link className="btn" to="/payment" onClick={onNavClick}>Get Tickets</Link>
           </div>
         </nav>
 
         <div className="nav-cta nav-cta-desktop" aria-hidden>
-          <a className="btn secondary" href="#login">Sign In</a>
-          <a className="btn" href="#get-tickets">Get Tickets</a>
+          <Link className="btn secondary" to="/login">Sign In</Link>
+          <Link className="btn" to="/payment">Get Tickets</Link>
         </div>
       </div>
     </header>

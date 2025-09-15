@@ -1,12 +1,14 @@
+// src/Components/Showcase.js
 import React, { useEffect, useRef, useState } from 'react';
 import '../styles/home.css';
 
-// Images list includes Audi R8, BMW M5 Competition (black), and "aura farming" style images (URLs)
 const FEATURED_CARS = [
-  { id: 'audi-r8', model: 'Audi R8', priceUSD: 170000, power: '562 hp', zeroTo100: '3.4s', img: 'https://images.unsplash.com/photo-1523986371872-9d3ba2e2f642?q=80&w=1600', credit: 'Unsplash' },
-  { id: 'bmw-m5', model: 'BMW M5 Competition (Black)', priceUSD: 120000, power: '617 hp', zeroTo100: '3.3s', img: 'https://images.unsplash.com/photo-1549921296-3c0b091d25d3?q=80&w=1600', credit: 'Unsplash' },
-  // Aura farming / stylized farming vehicles - two artistic images
-  { id: 'aura-1', model: 'Aura Farming — Concept', priceUSD: 0, power: '-', zeroTo100: '-', img: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1600', credit: 'Unsplash' },
+  { id: 'audi-r8', model: 'Audi R8', priceUSD: 170000, power: '562 hp', zeroTo100: '3.4s', img: encodeURI('/WhatsApp Image 2025-09-15 at 20.52.09_bcedf6d1.jpg'), credit: 'Unsplash' },
+  { id: 'bmw-m5', model: 'BMW M5 Competition (Black)', priceUSD: 120000, power: '617 hp', zeroTo100: '3.3s', img: encodeURI('/WhatsApp Image 2025-09-15 at 20.50.48_eb3a097a.jpg'), credit: 'Unsplash' },
+  { id: 'merc-amg', model: 'Mercedes AMG (Aura)', priceUSD: 160000, power: '630 hp', zeroTo100: '3.2s', img: encodeURI('/WhatsApp Image 2025-09-15 at 20.44.30_f4434a17.jpg'), credit: 'Unsplash' },
+  { id: 'ferrari', model: 'Ferrari (Showcase)', priceUSD: 290000, power: '661 hp', zeroTo100: '3.0s', img: encodeURI('/WhatsApp Image 2025-09-15 at 20.54.22_6ea3691a.jpg'), credit: 'Unsplash' },
+  { id: 'pagani', model: 'Pagani (Showcase)', priceUSD: 1500000, power: '740 hp', zeroTo100: '2.8s', img: encodeURI('/WhatsApp Image 2025-09-15 at 20.55.57_8e916857.jpg'), credit: 'Unsplash' },
+  { id: 'lambo', model: 'Lamborghini (Showcase)', priceUSD: 517000, power: '770 hp', zeroTo100: '2.8s', img: encodeURI('/WhatsApp Image 2025-09-15 at 20.56.43_0d976f1f.jpg'), credit: 'Unsplash' },
 ];
 
 function formatUSD(n) {
@@ -21,18 +23,29 @@ export default function Showcase({ onOpenTicket }) {
   useEffect(() => {
     startAuto();
     return () => stopAuto();
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index, paused]);
 
   const startAuto = () => {
     if (timer.current) return;
     if (paused) return;
-    timer.current = setInterval(() => setIndex(i => (i + 1) % FEATURED_CARS.length), 4000);
+    timer.current = setInterval(() => {
+      setIndex(i => (i + 1) % FEATURED_CARS.length);
+    }, 4000);
   };
-  const stopAuto = () => { if (timer.current) { clearInterval(timer.current); timer.current = null; } };
+
+  const stopAuto = () => {
+    if (timer.current) {
+      clearInterval(timer.current);
+      timer.current = null;
+    }
+  };
 
   useEffect(() => {
-    const onKey = (e) => { if (e.key === 'ArrowLeft') setIndex(i => (i - 1 + FEATURED_CARS.length) % FEATURED_CARS.length); if (e.key === 'ArrowRight') setIndex(i => (i + 1) % FEATURED_CARS.length); };
+    const onKey = (e) => {
+      if (e.key === 'ArrowLeft') setIndex(i => (i - 1 + FEATURED_CARS.length) % FEATURED_CARS.length);
+      if (e.key === 'ArrowRight') setIndex(i => (i + 1) % FEATURED_CARS.length);
+    };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);
@@ -52,7 +65,7 @@ export default function Showcase({ onOpenTicket }) {
                 <figcaption>
                   <div className="slide-meta">
                     <div className="slide-title">{c.model}</div>
-                    <div className="slide-price">{c.priceUSD ? formatUSD(c.priceUSD) : 'Showcase'}</div>
+                    <div className="slide-price">{formatUSD(c.priceUSD)}</div>
                   </div>
                 </figcaption>
               </figure>
@@ -64,7 +77,12 @@ export default function Showcase({ onOpenTicket }) {
 
           <div className="carousel-indicators" role="tablist" aria-label="Slide indicators">
             {FEATURED_CARS.map((_, i) => (
-              <button key={i} className={`dot ${i === index ? 'active' : ''}`} onClick={() => setIndex(i)} aria-label={`Go to slide ${i + 1}`} />
+              <button
+                key={i}
+                className={`dot ${i === index ? 'active' : ''}`}
+                onClick={() => setIndex(i)}
+                aria-label={`Go to slide ${i + 1}`}
+              />
             ))}
           </div>
         </div>
@@ -73,7 +91,7 @@ export default function Showcase({ onOpenTicket }) {
           <h2>Featured Supercars</h2>
           <p className="sub">Curated lineup for upcoming meets. Prices shown are indicative MSRPs — see cars at the next RevMeet.</p>
           <div className="featured-actions">
-            <button className="btn" onClick={() => document.querySelector('#events')?.scrollIntoView({ behavior: 'smooth' })}>Browse All Events</button>
+            <button className="btn" onClick={() => window.location.href = '/events'}>Browse All Events</button>
             <button className="btn secondary" onClick={() => onOpenTicket(null)}>Quick Tickets</button>
           </div>
         </div>
@@ -86,7 +104,7 @@ export default function Showcase({ onOpenTicket }) {
             <div className="card-body">
               <div className="card-row">
                 <div className="model">{car.model}</div>
-                <div className="price">{car.priceUSD ? formatUSD(car.priceUSD) : <small>Showcase</small>}</div>
+                <div className="price">{formatUSD(car.priceUSD)} <small>MSRP</small></div>
               </div>
 
               <div className="card-row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
