@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+/* RoleCard / ClientDashboard link styling (no underline, keep focus visible) */
+.role-card, .role-card a, .role-card .btn, .client-landing .btn, .client-landing a {
+  text-decoration: none !important;
+}
+
+.role-card { display: inline-block; border-radius: 12px; }
+.role-card:focus, .role-card:focus-within, .client-landing .btn:focus {
+  box-shadow: 0 0 0 4px rgba(255,138,0,0.12);
+  outline: none;
+}
+
+/* Keep hover/active visible but no underline */
+.role-card:hover, .role-card:active, .client-landing .btn:hover {
+  transform: translateY(-6px);
+}

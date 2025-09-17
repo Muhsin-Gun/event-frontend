@@ -1,9 +1,8 @@
-// src/Components/Showcase.js
 import React, { useEffect, useRef, useState } from 'react';
 import '../styles/home.css';
 
 const FEATURED_CARS = [
-  { id: 'audi-r8', model: 'Audi R8', priceUSD: 170000, power: '562 hp', zeroTo100: '3.4s', img: encodeURI('/WhatsApp Image 2025-09-15 at 20.52.09_bcedf6d1.jpg'), credit: 'Local' },
+  { id: 'audi-r8', model: 'Audi R8', priceUSD: 170000, power: '562 hp', zeroTo100: '3.4s', img: encodeURI('WhatsApp Image 2025-09-15 at 23.14.44_8e7cca7b.jpg'), credit: 'Local' },
   { id: 'bmw-m5', model: 'BMW M5 Competition (Black)', priceUSD: 120000, power: '617 hp', zeroTo100: '3.3s', img: encodeURI('/WhatsApp Image 2025-09-15 at 20.50.48_eb3a097a.jpg'), credit: 'Local' },
   { id: 'merc-amg', model: 'Mercedes AMG (Aura)', priceUSD: 160000, power: '630 hp', zeroTo100: '3.2s', img: encodeURI('/WhatsApp Image 2025-09-15 at 20.44.30_f4434a17.jpg'), credit: 'Local' },
   { id: 'ferrari', model: 'Ferrari (Showcase)', priceUSD: 290000, power: '661 hp', zeroTo100: '3.0s', img: encodeURI('/WhatsApp Image 2025-09-15 at 20.54.22_6ea3691a.jpg'), credit: 'Local' },
@@ -12,7 +11,11 @@ const FEATURED_CARS = [
 ];
 
 function formatUSD(n) {
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0
+  }).format(n);
 }
 
 export default function Showcase({ onOpenTicket }) {
@@ -21,25 +24,18 @@ export default function Showcase({ onOpenTicket }) {
   const timer = useRef(null);
 
   useEffect(() => {
-    startAuto();
-    return () => stopAuto();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [index, paused]);
-
-  const startAuto = () => {
-    if (timer.current) return;
-    if (paused) return;
-    timer.current = setInterval(() => {
-      setIndex(i => (i + 1) % FEATURED_CARS.length);
-    }, 4000);
-  };
-
-  const stopAuto = () => {
-    if (timer.current) {
-      clearInterval(timer.current);
-      timer.current = null;
+    if (!paused) {
+      timer.current = setInterval(() => {
+        setIndex(i => (i + 1) % FEATURED_CARS.length);
+      }, 4200);
     }
-  };
+    return () => {
+      if (timer.current) {
+        clearInterval(timer.current);
+        timer.current = null;
+      }
+    };
+  }, [paused]);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -50,22 +46,27 @@ export default function Showcase({ onOpenTicket }) {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  // width for slides container (dynamic)
-  const slidesWidth = `${FEATURED_CARS.length * 100}%`;
-  const transform = { transform: `translateX(-${index * (100 / FEATURED_CARS.length)}%)`, width: slidesWidth };
+  useEffect(() => {
+    if (index >= FEATURED_CARS.length) setIndex(0);
+  }, [index]);
 
   return (
     <section id="showcase" className="section container">
       <div className="featured-top">
         <div
           className="featured-carousel"
-          onMouseEnter={() => { setPaused(true); stopAuto(); }}
-          onMouseLeave={() => { setPaused(false); startAuto(); }}
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
         >
-          <div className="slides" style={transform}>
+          <div className="slides" style={{ transform: `translateX(-${index * 100}%)` }}>
             {FEATURED_CARS.map((c) => (
               <figure key={c.id} className="slide" role="group" aria-label={`${c.model} slide`}>
-                <img src={c.img} alt={c.model} loading="lazy" />
+                <img
+                  src={c.img}
+                  alt={c.model}
+                  loading="lazy"
+                  onError={(e) => { e.currentTarget.style.opacity = 0.3; }}
+                />
                 <figcaption>
                   <div className="slide-meta">
                     <div className="slide-title">{c.model}</div>
@@ -76,10 +77,14 @@ export default function Showcase({ onOpenTicket }) {
             ))}
           </div>
 
-          <button className="carousel-control prev" onClick={() => setIndex(i => (i - 1 + FEATURED_CARS.length) % FEATURED_CARS.length)} aria-label="Previous slide">‹</button>
-          <button className="carousel-control next" onClick={() => setIndex(i => (i + 1) % FEATURED_CARS.length)} aria-label="Next slide">›</button>
+          <button className="carousel-control prev"
+            onClick={() => setIndex(i => (i - 1 + FEATURED_CARS.length) % FEATURED_CARS.length)}
+            aria-label="Previous slide">‹</button>
+          <button className="carousel-control next"
+            onClick={() => setIndex(i => (i + 1) % FEATURED_CARS.length)}
+            aria-label="Next slide">›</button>
 
-          <div className="carousel-indicators" role="tablist" aria-label="Slide indicators">
+          <div className="carousel-indicators" role="tablist">
             {FEATURED_CARS.map((_, i) => (
               <button
                 key={i}
@@ -101,9 +106,9 @@ export default function Showcase({ onOpenTicket }) {
         </div>
       </div>
 
-      <div className="grid cards-grid" id="cards-grid" aria-live="polite">
+      <div className="grid cards-grid" aria-live="polite">
         {FEATURED_CARS.map(car => (
-          <article key={car.id} className="card" tabIndex="0" aria-label={`${car.model} card`}>
+          <article key={car.id} className="card">
             <img className="card-img" src={car.img} alt={car.model} loading="lazy" />
             <div className="card-body">
               <div className="card-row">
@@ -129,4 +134,6 @@ export default function Showcase({ onOpenTicket }) {
     </section>
   );
 }
+
+
 

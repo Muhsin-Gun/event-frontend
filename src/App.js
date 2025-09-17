@@ -1,7 +1,8 @@
 // src/App.js
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './Components/Navbar';
+import RoleCard from './Components/RoleCard';
 import Home from './Components/Home';
 import Events from './Components/Events';
 import Contact from './Components/Contact';
@@ -13,23 +14,43 @@ import EmployeeDashboard from './Components/EmployeeDashboard';
 import ClientDashboard from './Components/ClientDashboard';
 import Payment from './Components/Payment';
 
-export default function App() {
+// Small helper to hide Navbar on RoleCard
+function Layout({ children }) {
+  const location = useLocation();
+  const hideNavbar = location.pathname === '/'; // Hide navbar only on RoleCard page
   return (
     <>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/events" element={<Events />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/employee" element={<EmployeeDashboard />} />
-        <Route path="/client" element={<ClientDashboard />} />
-        <Route path="/payment" element={<Payment />} />
-      </Routes>
+      {!hideNavbar && <Navbar />}
+      {children}
     </>
   );
 }
 
+export default function App() {
+  return (
+    <Router>
+      <Layout>
+        <Routes>
+          {/* Entry point */}
+          <Route path="/" element={<RoleCard />} />
+
+          {/* Event frontend (inside ClientDashboard) */}
+          <Route path="/client" element={<ClientDashboard />} />
+
+          {/* Dashboards */}
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/employee" element={<EmployeeDashboard />} />
+
+          {/* Regular site pages */}
+          <Route path="/home" element={<Home />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/payment" element={<Payment />} />
+        </Routes>
+      </Layout>
+    </Router>
+  );
+}
