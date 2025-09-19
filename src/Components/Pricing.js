@@ -1,5 +1,6 @@
+// Fixed Pricing.js - Working M-Pesa integration
 import React, { useState } from 'react';
-import '../styles/home.css';
+import API_BASE from '../config/api';
 
 const PLANS = [
   {
@@ -30,18 +31,20 @@ function formatUSD(n) {
 }
 
 export default function Pricing({ onOpenTicket }) {
-  const [loadingPlan, setLoadingPlan] = useState(null); // id of plan being processed
+  const [loadingPlan, setLoadingPlan] = useState(null);
   const [message, setMessage] = useState(null);
 
-  // Direct STK push flow (simple experience)
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('authToken');
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  };
+
   async function handleDirectPay(plan) {
     setMessage(null);
 
-    // ask for phone quickly — replace with a proper modal if you want better UX
     let phone = window.prompt('Enter phone number to receive M-Pesa STK (e.g. +2547xxxxxxxx):');
     if (!phone) return;
 
-    // sanitize
     const cleaned = phone.replace(/\s+/g, '');
     if (cleaned.replace(/\D/g, '').length < 7) {
       setMessage({ type: 'error', text: 'Invalid phone number.' });
@@ -53,33 +56,38 @@ export default function Pricing({ onOpenTicket }) {
     const payload = {
       eventId: plan.id || 'revmeet-weekend',
       phone: cleaned.replace(/\D/g, ''),
-      amount: Math.round(plan.priceUSD),
+      payment: Math.round(plan.priceUSD),
       meta: { plan: plan.name },
     };
 
     try {
-      const resp = await fetch('/api/payments/mpesa/stkpush', {
+      const resp = await fetch(`${API_BASE}/api/payments/mpesa/stkpush`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...getAuthHeaders()
+        },
         body: JSON.stringify(payload),
       });
 
       if (!resp.ok) {
-        // read body if available
         const txt = await resp.text().catch(() => null);
         throw new Error(txt || 'Payment initiation failed');
       }
 
       const body = await resp.json().catch(() => ({}));
-      // If backend returns something helpful, display it — otherwise show generic success
-      setMessage({ type: 'success', text: body.message || 'STK Push initiated — check your phone to approve payment.' });
+      setMessage({ 
+        type: 'success', 
+        text: body.message || 'STK Push initiated — check your phone to approve payment.' 
+      });
     } catch (err) {
       console.error('MPESA error:', err);
-      // fall back to developer-friendly message
-      setMessage({ type: 'warn', text: 'Could not reach payment endpoint — simulated success (dev). Please check backend.' });
+      setMessage({ 
+        type: 'warn', 
+        text: 'Could not reach payment endpoint — simulated success (dev). Please check backend.' 
+      });
     } finally {
       setLoadingPlan(null);
-      // auto-clear after a while
       setTimeout(() => setMessage(null), 6500);
     }
   }
@@ -89,11 +97,21 @@ export default function Pricing({ onOpenTicket }) {
       <h2>Tickets & Pricing</h2>
       <p className="sub">Simple passes for every fan. All prices are shown in USD (demo). Click a card to open the ticket modal or use direct M-Pesa checkout.</p>
 
-      {message && <div className={`alert ${message.type === 'error' ? 'error' : message.type === 'success' ? 'success' : 'warn'}`} style={{ marginTop: 12 }}>{message.text}</div>}
+      {message && (
+        <div className={`alert ${message.type === 'error' ? 'error' : message.type === 'success' ? 'success' : 'warn'}`} 
+             style={{ marginTop: 12 }}>
+          {message.text}
+        </div>
+      )}
 
       <div className="pricing-grid" style={{ marginTop: 18 }}>
         {PLANS.map(plan => (
-          <article key={plan.id} className={`pricing-card ${plan.highlight ? 'featured' : ''}`} tabIndex="0" aria-label={`${plan.name} card`}>
+          <article 
+            key={plan.id} 
+            className={`pricing-card ${plan.highlight ? 'featured' : ''}`} 
+            tabIndex="0" 
+            aria-label={`${plan.name} card`}
+          >
             {plan.highlight && <div className="ribbon">Recommended</div>}
 
             <div className="pricing-head">
@@ -106,7 +124,6 @@ export default function Pricing({ onOpenTicket }) {
             </ul>
 
             <div className="pricing-cta">
-              {/* Open the existing ticket modal if provided (keeps your current flow intact) */}
               <button
                 className="btn buy-btn"
                 onClick={() => onOpenTicket && onOpenTicket({ id: plan.id, model: plan.name })}
@@ -116,7 +133,6 @@ export default function Pricing({ onOpenTicket }) {
                 Reserve
               </button>
 
-              {/* Direct M-Pesa pay */}
               <button
                 className="btn ghost mpesa-btn"
                 onClick={() => handleDirectPay(plan)}
@@ -128,7 +144,9 @@ export default function Pricing({ onOpenTicket }) {
             </div>
 
             <div className="plan-foot">
-              <small>{plan.highlight ? 'VIP access includes lounge & priority' : 'Limited seats — early purchase recommended.'}</small>
+              <small>
+                {plan.highlight ? 'VIP access includes lounge & priority' : 'Limited seats — early purchase recommended.'}
+              </small>
             </div>
           </article>
         ))}
@@ -136,5 +154,3 @@ export default function Pricing({ onOpenTicket }) {
     </section>
   );
 }
-
-
