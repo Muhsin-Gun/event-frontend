@@ -1,13 +1,10 @@
-// src/Components/RoleCards.js
 import React from 'react';
 
-// RoleCards (plain .js) — layout: two cards side-by-side (Admin, Employee) and Client centered below.
-// Each card now uses the same orange color (client color) per your request.
-
+// RoleCards with professional black theme design
 export const ROLE_CARDS = [
-  { key: 'admin', label: 'ADMIN', subtitle: 'Manage events, users & reports', to: '/admin', color: '#ff8a00' },
-  { key: 'employee', label: 'EMPLOYEE', subtitle: 'Add events & handle sales', to: '/employee', color: '#ff8a00' },
-  { key: 'client', label: 'CLIENT', subtitle: 'Browse events & buy tickets', to: '/client', color: '#ff8a00' },
+  { key: 'admin', label: 'ADMIN', subtitle: 'Manage events, users & reports', to: '/admin', color: '#000000' },
+  { key: 'employee', label: 'EMPLOYEE', subtitle: 'Add events & handle sales', to: '/employee', color: '#000000' },
+  { key: 'client', label: 'CLIENT', subtitle: 'Browse events & buy tickets', to: '/client', color: '#000000' },
 ];
 
 export default function RoleCards() {
@@ -23,87 +20,316 @@ export default function RoleCards() {
   }
 
   return (
-    <section className="role-cards-section" aria-label="Role selection">
-      <div className="role-cards-grid">
-        {/* Top row: Admin & Employee */}
-        <a
-          href={ROLE_CARDS[0].to}
-          className="role-card role-admin"
-          onClick={(e) => handleAnchorClick(e, ROLE_CARDS[0].to)}
-          aria-label={`Open ${ROLE_CARDS[0].label} dashboard`}
-        >
-          <div className="role-card-inner">
-            <div className="role-title-wrap">
-              <div className="role-title">{ROLE_CARDS[0].label}</div>
-              <div className="role-sub">{ROLE_CARDS[0].subtitle}</div>
+    <div style={{ 
+      background: 'linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%)', 
+      minHeight: '100vh', 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center',
+      padding: '40px 20px'
+    }}>
+      <section className="role-cards-section" aria-label="Role selection" style={{ width: '100%', maxWidth: 1200 }}>
+        {/* Header */}
+        <div style={{ textAlign: 'center', marginBottom: 60 }}>
+          <h1 style={{ 
+            color: '#ffffff', 
+            fontSize: 'clamp(2.5rem, 5vw, 4rem)', 
+            fontWeight: '900', 
+            margin: '0 0 20px 0',
+            letterSpacing: '-0.02em'
+          }}>
+            Event Management System
+          </h1>
+          <p style={{ 
+            color: '#888888', 
+            fontSize: 'clamp(1rem, 2vw, 1.3rem)', 
+            margin: 0,
+            fontWeight: '500'
+          }}>
+            Choose your role to continue
+          </p>
+        </div>
+
+        <div className="role-cards-grid" style={{
+          display: 'grid',
+          gap: 30,
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gridAutoRows: 'minmax(200px, auto)',
+          maxWidth: 900,
+          margin: '0 auto'
+        }}>
+          {/* Top row: Admin & Employee */}
+          <a
+            href={ROLE_CARDS[0].to}
+            className="role-card role-admin"
+            onClick={(e) => handleAnchorClick(e, ROLE_CARDS[0].to)}
+            aria-label={`Open ${ROLE_CARDS[0].label} dashboard`}
+            style={{
+              display: 'block',
+              textDecoration: 'none',
+              color: 'inherit',
+              borderRadius: 20,
+              padding: 35,
+              minHeight: 220,
+              background: 'linear-gradient(135deg, #1a1a1a 0%, #000000 100%)',
+              border: '2px solid #333333',
+              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              position: 'relative',
+              overflow: 'hidden',
+              boxShadow: '0 10px 40px rgba(0,0,0,0.5)'
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-10px) scale(1.02)';
+              e.currentTarget.style.boxShadow = '0 25px 60px rgba(0,0,0,0.8)';
+              e.currentTarget.style.borderColor = '#555555';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0px) scale(1)';
+              e.currentTarget.style.boxShadow = '0 10px 40px rgba(0,0,0,0.5)';
+              e.currentTarget.style.borderColor = '#333333';
+            }}
+          >
+            <div style={{ 
+              position: 'absolute', 
+              top: 0, 
+              right: 0, 
+              width: 100, 
+              height: 100, 
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 70%)',
+              borderRadius: '0 20px 0 100%'
+            }} />
+            
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center', 
+              height: '100%',
+              position: 'relative',
+              zIndex: 1
+            }}>
+              <div>
+                <div style={{ 
+                  fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', 
+                  fontWeight: '900', 
+                  color: '#ffffff',
+                  marginBottom: 10
+                }}>
+                  {ROLE_CARDS[0].label}
+                </div>
+                <div style={{ 
+                  color: '#bbbbbb', 
+                  fontWeight: '600', 
+                  fontSize: 'clamp(0.9rem, 1.5vw, 1.1rem)',
+                  lineHeight: 1.3
+                }}>
+                  {ROLE_CARDS[0].subtitle}
+                </div>
+              </div>
+              <div style={{ 
+                fontSize: '1.5rem', 
+                fontWeight: '800', 
+                color: '#888888',
+                transition: 'all 0.3s ease'
+              }}>
+                →
+              </div>
             </div>
-            <div className="role-cta">Enter →</div>
-          </div>
-        </a>
+          </a>
 
-        <a
-          href={ROLE_CARDS[1].to}
-          className="role-card role-employee"
-          onClick={(e) => handleAnchorClick(e, ROLE_CARDS[1].to)}
-          aria-label={`Open ${ROLE_CARDS[1].label} dashboard`}
-        >
-          <div className="role-card-inner">
-            <div className="role-title-wrap">
-              <div className="role-title">{ROLE_CARDS[1].label}</div>
-              <div className="role-sub">{ROLE_CARDS[1].subtitle}</div>
+          <a
+            href={ROLE_CARDS[1].to}
+            className="role-card role-employee"
+            onClick={(e) => handleAnchorClick(e, ROLE_CARDS[1].to)}
+            aria-label={`Open ${ROLE_CARDS[1].label} dashboard`}
+            style={{
+              display: 'block',
+              textDecoration: 'none',
+              color: 'inherit',
+              borderRadius: 20,
+              padding: 35,
+              minHeight: 220,
+              background: 'linear-gradient(135deg, #1a1a1a 0%, #000000 100%)',
+              border: '2px solid #333333',
+              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              position: 'relative',
+              overflow: 'hidden',
+              boxShadow: '0 10px 40px rgba(0,0,0,0.5)'
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-10px) scale(1.02)';
+              e.currentTarget.style.boxShadow = '0 25px 60px rgba(0,0,0,0.8)';
+              e.currentTarget.style.borderColor = '#555555';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0px) scale(1)';
+              e.currentTarget.style.boxShadow = '0 10px 40px rgba(0,0,0,0.5)';
+              e.currentTarget.style.borderColor = '#333333';
+            }}
+          >
+            <div style={{ 
+              position: 'absolute', 
+              top: 0, 
+              right: 0, 
+              width: 100, 
+              height: 100, 
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 70%)',
+              borderRadius: '0 20px 0 100%'
+            }} />
+            
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center', 
+              height: '100%',
+              position: 'relative',
+              zIndex: 1
+            }}>
+              <div>
+                <div style={{ 
+                  fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', 
+                  fontWeight: '900', 
+                  color: '#ffffff',
+                  marginBottom: 10
+                }}>
+                  {ROLE_CARDS[1].label}
+                </div>
+                <div style={{ 
+                  color: '#bbbbbb', 
+                  fontWeight: '600', 
+                  fontSize: 'clamp(0.9rem, 1.5vw, 1.1rem)',
+                  lineHeight: 1.3
+                }}>
+                  {ROLE_CARDS[1].subtitle}
+                </div>
+              </div>
+              <div style={{ 
+                fontSize: '1.5rem', 
+                fontWeight: '800', 
+                color: '#888888',
+                transition: 'all 0.3s ease'
+              }}>
+                →
+              </div>
             </div>
-            <div className="role-cta">Enter →</div>
-          </div>
-        </a>
+          </a>
 
-        {/* Middle row: Client centered */}
-        <a
-          href={ROLE_CARDS[2].to}
-          className="role-card role-client role-client-centered"
-          onClick={(e) => handleAnchorClick(e, ROLE_CARDS[2].to)}
-          aria-label={`Open ${ROLE_CARDS[2].label} dashboard`}
-        >
-          <div className="role-card-inner">
-            <div className="role-title-wrap">
-              <div className="role-title">{ROLE_CARDS[2].label}</div>
-              <div className="role-sub">{ROLE_CARDS[2].subtitle}</div>
+          {/* Bottom row: Client centered */}
+          <a
+            href={ROLE_CARDS[2].to}
+            className="role-card role-client role-client-centered"
+            onClick={(e) => handleAnchorClick(e, ROLE_CARDS[2].to)}
+            aria-label={`Open ${ROLE_CARDS[2].label} dashboard`}
+            style={{
+              display: 'block',
+              textDecoration: 'none',
+              color: 'inherit',
+              borderRadius: 20,
+              padding: 35,
+              minHeight: 220,
+              background: 'linear-gradient(135deg, #1a1a1a 0%, #000000 100%)',
+              border: '2px solid #333333',
+              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              position: 'relative',
+              overflow: 'hidden',
+              boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
+              gridColumn: '1 / -1',
+              justifySelf: 'center',
+              width: '70%'
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-10px) scale(1.02)';
+              e.currentTarget.style.boxShadow = '0 25px 60px rgba(0,0,0,0.8)';
+              e.currentTarget.style.borderColor = '#555555';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0px) scale(1)';
+              e.currentTarget.style.boxShadow = '0 10px 40px rgba(0,0,0,0.5)';
+              e.currentTarget.style.borderColor = '#333333';
+            }}
+          >
+            <div style={{ 
+              position: 'absolute', 
+              top: 0, 
+              right: 0, 
+              width: 100, 
+              height: 100, 
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 70%)',
+              borderRadius: '0 20px 0 100%'
+            }} />
+            
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center', 
+              height: '100%',
+              position: 'relative',
+              zIndex: 1
+            }}>
+              <div>
+                <div style={{ 
+                  fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', 
+                  fontWeight: '900', 
+                  color: '#ffffff',
+                  marginBottom: 10
+                }}>
+                  {ROLE_CARDS[2].label}
+                </div>
+                <div style={{ 
+                  color: '#bbbbbb', 
+                  fontWeight: '600', 
+                  fontSize: 'clamp(0.9rem, 1.5vw, 1.1rem)',
+                  lineHeight: 1.3
+                }}>
+                  {ROLE_CARDS[2].subtitle}
+                </div>
+              </div>
+              <div style={{ 
+                fontSize: '1.5rem', 
+                fontWeight: '800', 
+                color: '#888888',
+                transition: 'all 0.3s ease'
+              }}>
+                →
+              </div>
             </div>
-            <div className="role-cta">Enter →</div>
-          </div>
-        </a>
-      </div>
+          </a>
+        </div>
 
-      <style>{`
-        .role-cards-section { padding: 40px 12px; }
-        .role-cards-grid { width: min(1100px, 94vw); margin: 0 auto; display: grid; gap: 20px; grid-template-columns: repeat(2, 1fr); grid-auto-rows: minmax(160px, auto); }
+        {/* Footer */}
+        <div style={{ textAlign: 'center', marginTop: 60 }}>
+          <p style={{ 
+            color: '#666666', 
+            fontSize: '0.9rem',
+            margin: 0
+          }}>
+            Secure event management platform with role-based access control
+          </p>
+        </div>
+      </section>
 
-        /* Place client as full-width row below and center it visually */
-        .role-client-centered { grid-column: 1 / -1; justify-self: center; width: 60%; }
-
-        .role-card { display: block; text-decoration: none; color: inherit; border-radius: 14px; padding: 26px; min-height: 180px; box-shadow: 0 10px 30px rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.04); transition: transform .28s ease, box-shadow .28s ease; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.08)); }
-        .role-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 28px 60px rgba(0,0,0,.5); }
-
-        .role-card-inner { display:flex; justify-content:space-between; align-items:center; gap:12px; }
-        .role-title { font-size: clamp(1.8rem, 4.6vw, 2.8rem); font-weight: 900; }
-        .role-sub { color: rgba(255,255,255,.8); font-weight:600; margin-top:6px; font-size: .95rem; }
-        .role-title-wrap { display:flex; flex-direction:column; }
-        .role-cta { font-weight:800; opacity:.95; }
-
-        /* Colors: all cards use the client orange */
-        .role-admin, .role-employee, .role-client { background: linear-gradient(180deg, rgba(255,138,0,0.14), rgba(255,138,0,0.06)); color: #fff7ef; }
-
-        .role-card:focus { outline: 4px solid rgba(255,183,3,.12); outline-offset: 6px; }
-
-        @media (max-width: 880px) {
-          .role-cards-grid { grid-template-columns: 1fr; }
-          .role-client-centered { width: 100%; }
-          .role-card { min-height: 160px; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .role-card { transition: none !important; transform: none !important; }
-        }
-      `}</style>
-    </section>
+      <style>
+        {`
+          @media (max-width: 768px) {
+            .role-cards-grid {
+              grid-template-columns: 1fr !important;
+            }
+            .role-client-centered {
+              width: 100% !important;
+            }
+          }
+          
+          @media (prefers-reduced-motion: reduce) {
+            .role-card {
+              transition: none !important;
+            }
+          }
+          
+          .role-card:focus {
+            outline: 3px solid rgba(255,255,255,0.3);
+            outline-offset: 4px;
+          }
+        `}
+      </style>
+    </div>
   );
 }

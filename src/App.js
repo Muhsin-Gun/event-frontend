@@ -14,13 +14,23 @@ import EmployeeDashboard from './Components/EmployeeDashboard';
 import ClientDashboard from './Components/ClientDashboard';
 import Payment from './Components/Payment';
 
-// Small helper to hide Navbar on RoleCard
+// Layout component to handle navbar visibility logic
 function Layout({ children }) {
   const location = useLocation();
-  const hideNavbar = location.pathname === '/'; // Hide navbar only on RoleCard page
+  
+  // Hide navbar on these specific routes
+  const hideNavbarRoutes = [
+    '/',           // RoleCard page
+    '/admin',      // Admin dashboard
+    '/employee',   // Employee dashboard
+    '/client'      // Client dashboard (they have their own navbar logic)
+  ];
+  
+  const showNavbar = !hideNavbarRoutes.includes(location.pathname);
+  
   return (
     <>
-      {!hideNavbar && <Navbar />}
+      {showNavbar && <Navbar />}
       {children}
     </>
   );
@@ -31,24 +41,30 @@ export default function App() {
     <Router>
       <Layout>
         <Routes>
-          {/* Entry point */}
+          {/* Entry point - Role selection */}
           <Route path="/" element={<RoleCard />} />
-
-          {/* Event frontend (inside ClientDashboard) */}
-          <Route path="/client" element={<ClientDashboard />} />
-
-          {/* Dashboards */}
+          
+          {/* Dashboard routes */}
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/employee" element={<EmployeeDashboard />} />
-
-          {/* Regular site pages */}
+          <Route path="/client" element={<ClientDashboard />} />
+          
+          {/* Main site pages (will show navbar) */}
           <Route path="/home" element={<Home />} />
           <Route path="/events" element={<Events />} />
+          <Route path="/events/:id" element={<Events />} />
           <Route path="/contact" element={<Contact />} />
+          
+          {/* Auth pages (will show navbar) */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          
+          {/* Payment page (will show navbar) */}
           <Route path="/payment" element={<Payment />} />
+          
+          {/* Catch all - redirect to home */}
+          <Route path="*" element={<RoleCard />} />
         </Routes>
       </Layout>
     </Router>
