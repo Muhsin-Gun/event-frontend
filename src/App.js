@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import Navbar from './Components/Navbar';
 import RoleCard from './Components/RoleCard';
 import Home from './Components/Home';
-import Events from './Components/Events';
+
 import Contact from './Components/Contact';
 import Login from './Components/Login';
 import Register from './Components/Register';
@@ -51,8 +51,8 @@ export default function App() {
           
           {/* Main site pages (will show navbar) */}
           <Route path="/home" element={<Home />} />
-          <Route path="/events" element={<Events />} />
-          <Route path="/events/:id" element={<Events />} />
+         
+          
           <Route path="/contact" element={<Contact />} />
           
           {/* Auth pages (will show navbar) */}

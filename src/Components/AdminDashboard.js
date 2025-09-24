@@ -79,8 +79,14 @@ export default function AdminDashboard() {
       const sales = await loadSalesData();
       // Then load rest in parallel
       await Promise.all([loadUsers(), loadEvents()]);
-      // Now set totalPayments based on sales we fetched
-      setStats(prev => ({ ...prev, totalPayments: (Array.isArray(sales) ? sales.length : 0) }));
+
+      // Boxing logic: we count punches (payments), not rounds (groups)
+      // totalPayments should sum the 'payments' field from each aggregated group
+      const totalPayments = Array.isArray(sales)
+        ? sales.reduce((sum, g) => sum + (Number(g.payments) || 0), 0)
+        : 0;
+
+      setStats(prev => ({ ...prev, totalPayments }));
     } catch (err) {
       console.error('Dashboard error', err);
     } finally {
@@ -91,8 +97,16 @@ export default function AdminDashboard() {
   // return sales array for caller usage
   const loadSalesData = async () => {
     try {
+      // Use last 30 days dynamically rather than a hard-coded year
+      const toDate = new Date();
+      const fromDate = new Date(toDate);
+      fromDate.setDate(toDate.getDate() - 30);
+
+      const fromStr = fromDate.toISOString().slice(0, 10); // YYYY-MM-DD
+      const toStr = toDate.toISOString().slice(0, 10);
+
       const salesResp = await fetch(
-        `${API_BASE}/api/reports/sales?from=2024-01-01&to=2024-12-31&groupBy=month`,
+        `${API_BASE}/api/reports/sales?from=${fromStr}&to=${toStr}&groupBy=month`,
         { headers: { 'Content-Type': 'application/json', ...getAuthHeaders() } }
       );
 
@@ -111,7 +125,7 @@ export default function AdminDashboard() {
 
       setSalesData(dataArr);
 
-      // compute total revenue defensively
+      // compute total revenue defensively (sum of aggregated totalAmount fields)
       const totalRevenue = dataArr.reduce((s, item) => s + (Number(item.totalAmount) || 0), 0);
       setStats(prev => ({ ...prev, totalRevenue }));
 
@@ -273,6 +287,47 @@ export default function AdminDashboard() {
       alert(err.message || 'Registration error');
     } finally {
       setAuthLoading(false);
+    }
+  };
+
+  const handleDeleteUser = async (userId) => {
+    if (!window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/api/users/deleteUser/${userId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders()
+        }
+      });
+
+      const json = await res.json();
+
+      if (res.ok) {
+        // Remove user from local state
+        setUsers(prev => prev.filter(user => user._id !== userId));
+        
+        // Update stats
+        const deletedUser = users.find(u => u._id === userId);
+        if (deletedUser) {
+          setStats(prev => ({
+            ...prev,
+            totalUsers: prev.totalUsers - 1,
+            totalEmployees: deletedUser.role === 'employee' ? prev.totalEmployees - 1 : prev.totalEmployees,
+            totalClients: deletedUser.role === 'client' ? prev.totalClients - 1 : prev.totalClients
+          }));
+        }
+        
+        alert('User deleted successfully');
+      } else {
+        throw new Error(json.message || 'Failed to delete user');
+      }
+    } catch (err) {
+      console.error('Delete user error:', err);
+      alert(err.message || 'Failed to delete user');
     }
   };
 
@@ -575,9 +630,20 @@ export default function AdminDashboard() {
                       </td>
                       <td style={tableCellStyle()}>{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '-'}</td>
                       <td style={tableCellStyle()}>
-                        <button style={{ ...buttonStyle('#ff3b3b'), padding: '5px 10px', fontSize: '12px' }}>
-                          Manage
-                        </button>
+                        <div style={{ display: 'flex', gap: 8 }}>
+                          <button 
+                            style={{ ...buttonStyle('#06d6a0'), padding: '5px 10px', fontSize: '12px' }}
+                            onClick={() => alert('Edit functionality coming soon')}
+                          >
+                            Edit
+                          </button>
+                          <button 
+                            style={{ ...buttonStyle('#ff3b3b'), padding: '5px 10px', fontSize: '12px' }}
+                            onClick={() => handleDeleteUser(user._id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}

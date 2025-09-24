@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Hero from './Hero';
 import Showcase from './Showcase';
-import Events from './Events';
+
 import Pricing from './Pricing';
 import Sponsors from './Sponsors';
 import Gallery from './Gallery';
@@ -28,7 +28,7 @@ export default function Home() {
       <main>
         <div data-reveal><Hero onGetTickets={() => openTicket(null)} /></div>
         <div data-reveal><Showcase onOpenTicket={openTicket} /></div>
-        <div data-reveal><Events onOpenTicket={openTicket} /></div>
+       
         <div data-reveal><Pricing onOpenTicket={openTicket} /></div>
         <div data-reveal><Sponsors /></div>
         <div data-reveal><Gallery /></div>
